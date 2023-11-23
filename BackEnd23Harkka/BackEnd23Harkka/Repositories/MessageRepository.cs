@@ -13,9 +13,19 @@ namespace BackEnd23Harkka.Repositories
             _context = context;
         }
 
-        public Task<bool> DeleteMessageAsync(long id)
+        public async Task<bool> DeleteMessageAsync(Message message)
         {
-            throw new NotImplementedException();
+            _context.Remove(message);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            return true;
         }
 
         public async Task<Message?> GetMessageAsync(long id)
@@ -32,11 +42,20 @@ namespace BackEnd23Harkka.Repositories
         {
             _context.Messages.Add(message);
             await _context.SaveChangesAsync();
+            return message;
         }
 
-        public Task<bool> UpdateMessageAsync(Message message)
+        public async Task<bool> UpdateMessageAsync(Message message)
         {
-            throw new NotImplementedException();
+            _context.Entry(message).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            } catch(Exception ex)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

@@ -1,3 +1,4 @@
+using BackEnd23Harkka.MiddleWare;
 using BackEnd23Harkka.Models;
 using BackEnd23Harkka.Repositories;
 using BackEnd23Harkka.Services;
@@ -35,7 +36,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+//app.UseMiddleware<ApiKeyMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();

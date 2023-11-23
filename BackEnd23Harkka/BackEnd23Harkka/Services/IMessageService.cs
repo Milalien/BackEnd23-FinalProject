@@ -7,7 +7,7 @@ namespace BackEnd23Harkka.Services
         Task<IEnumerable<Message>> GetMessagesAsync();
         Task<Message?> GetMessageAsync(long id);
         Task<Message> NewMessageAsync(Message message);
-        Task<bool> UpdateMessageAsync(Message message);
+        Task<bool> UpdateMessageAsync(long id);
         Task<bool> DeleteMessageAsync(long id);
 
     }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BackEnd23Harkka.Models;
+using BackEnd23Harkka.Services;
 
 namespace BackEnd23Harkka.Controllers
 {
@@ -14,9 +15,11 @@ namespace BackEnd23Harkka.Controllers
     public class MessagesController : ControllerBase
     {
         private readonly MessageServiceContext _context;
+        private readonly IMessageService _messageService;
 
-        public MessagesController(MessageServiceContext context)
+        public MessagesController(IMessageService service, MessageServiceContext context)
         {
+            _messageService = service;
             _context = context;
         }
 

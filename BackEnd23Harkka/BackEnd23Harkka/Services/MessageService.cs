@@ -10,29 +10,40 @@ namespace BackEnd23Harkka.Services
             _repository= repository;
         }
 
-        public Task<bool> DeleteMessageAsync(long id)
+        public async Task<bool> DeleteMessageAsync(long id)
         {
-            throw new NotImplementedException();
+            Message? message = await _repository.GetMessageAsync(id);
+            if (message != null)
+            {
+                return await _repository.DeleteMessageAsync(message);
+            } 
+            return false;
         }
 
-        public Task<Message?> GetMessageAsync(long id)
+        public async Task<Message?> GetMessageAsync(long id)
         {
-            throw new NotImplementedException();
+            return await _repository.GetMessageAsync(id);
         }
 
         public Task<IEnumerable<Message>> GetMessagesAsync()
         {
-            throw new NotImplementedException();
+            return _repository.GetMessagesAsync();
         }
 
-        public Task<Message> NewMessageAsync(Message message)
+        public async Task<Message> NewMessageAsync(Message message)
         {
-            throw new NotImplementedException();
+            return await _repository.NewMessageAsync(message);
         }
 
-        public Task<bool> UpdateMessageAsync(Message message)
+        public async Task<bool> UpdateMessageAsync(long id)
         {
-            throw new NotImplementedException();
+            Message? message = await _repository.GetMessageAsync(id);
+            if (message != null)
+            {
+                return await _repository.UpdateMessageAsync(message);
+            }
+
+            return false;
         }
     }
 }
