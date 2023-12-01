@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BackEnd23Harkka.Models;
+using BackEnd23Harkka.Services;
 
 namespace BackEnd23Harkka.Controllers
 {
@@ -14,16 +15,19 @@ namespace BackEnd23Harkka.Controllers
     public class UsersController : ControllerBase
     {
         private readonly MessageServiceContext _context;
+        private readonly IUserService _service;
 
-        public UsersController(MessageServiceContext context)
+        public UsersController(MessageServiceContext context, IUserService service)
         {
             _context = context;
+            _service = service;
         }
 
         // GET: api/Users
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
+            
             return await _context.Users.ToListAsync();
         }
 
@@ -77,10 +81,14 @@ namespace BackEnd23Harkka.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            User? newUser = await _service.NewUserAsync(user);
+            
+            if(newUser == null)
+            {
+                return Problem();
+            }
 
-            return CreatedAtAction("GetUser", new { id = user.Id }, user);
+            return CreatedAtAction("NewUser", new { id = newUser.Id }, newUser);
         }
 
         // DELETE: api/Users/5

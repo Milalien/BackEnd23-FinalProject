@@ -30,6 +30,11 @@ namespace BackEnd23Harkka.Repositories
             return await _context.Users.FindAsync(id);
         }
 
+        public async Task<User?> GetUserAsync(string username)
+        {
+            return _context.Users.Where(x=>x.userName == username).FirstOrDefault();
+        }
+
         public async Task<IEnumerable<User>> GetUsersAsync()
         {
             return await _context.Users.ToListAsync();

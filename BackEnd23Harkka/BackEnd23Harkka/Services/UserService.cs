@@ -1,4 +1,5 @@
-﻿using BackEnd23Harkka.Models;
+﻿using BackEnd23Harkka.Middleware;
+using BackEnd23Harkka.Models;
 using BackEnd23Harkka.Repositories;
 using NuGet.Protocol.Core.Types;
 
@@ -6,10 +7,12 @@ namespace BackEnd23Harkka.Services
 {
     public class UserService : IUserService
     {
-        private readonly UserRepository _repository;
-        public UserService(UserRepository repository)
+        private readonly IUserRepository _repository;
+        private readonly IUserAuthenticationService _authenticationService;
+        public UserService(UserRepository repository, IUserAuthenticationService authenticationService)
         {
             _repository = repository;
+            _authenticationService = authenticationService;
         }
         public async Task<bool> DeleteUserAsync(long id)
         {
@@ -32,9 +35,15 @@ namespace BackEnd23Harkka.Services
             return _repository.GetUsersAsync();
         }
 
-        public Task<User> NewUserAsync(User user)
+        public async Task<User?> NewUserAsync(User user)
         {
-            return _repository.NewUserAsync(user);
+            User? newUser = _authenticationService.CreateUserCredentials(user);
+            if(newUser!=null)
+            {
+                return await _repository.NewUserAsync(newUser);
+
+            }
+            return null;
         }
 
         public async Task<bool> UpdateUserAsync(long id)

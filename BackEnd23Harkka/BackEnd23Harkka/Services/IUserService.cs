@@ -6,7 +6,7 @@ namespace BackEnd23Harkka.Services
     {
         Task<IEnumerable<User>> GetUsersAsync();
         Task<User?> GetUserAsync(long id);
-        Task<User> NewUserAsync(User user);
+        Task<User?> NewUserAsync(User user);
         Task<bool> UpdateUserAsync(long id);
         Task<bool> DeleteUserAsync(long id);
     }

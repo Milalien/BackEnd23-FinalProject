@@ -13,6 +13,8 @@ namespace BackEnd23Harkka.Models
         [MinLength(8)]
         [MaxLength(255)]
         public string Password { get; set; }
+
+        public byte[]? Salt { get; set; }
         [Required]
         [MaxLength(50)]
         public string? firstName { get; set; }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BackEnd23Harkka.Models;
 using BackEnd23Harkka.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BackEnd23Harkka.Controllers
 {
@@ -24,17 +25,19 @@ namespace BackEnd23Harkka.Controllers
         }
 
         // GET: api/Messages
+
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Message>>> GetMessages()
         {
-            return await _context.Messages.ToListAsync();
+            return Ok(await _messageService.GetMessagesAsync());
         }
 
         // GET: api/Messages/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Message>> GetMessage(int id)
+        public async Task<ActionResult<Message>> GetMessage(long id)
         {
-            var message = await _context.Messages.FindAsync(id);
+            Message? message = await _messageService.GetMessageAsync(id);
 
             if (message == null)
             {

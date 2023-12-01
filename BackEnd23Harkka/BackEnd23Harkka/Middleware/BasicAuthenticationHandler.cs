@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using BackEnd23Harkka.Repositories;
+using BackEnd23Harkka.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
@@ -10,15 +12,20 @@ namespace BackEnd23Harkka.Middleware
 {
     public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
-      
-        public BasicAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock) : base(options, logger, encoder, clock)
+        private readonly IUserRepository _repository;
+        private readonly IUserAuthenticationService _authenticationService;
+
+        public BasicAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock, IUserRepository repository, IUserAuthenticationService authenticationService) : base(options, logger, encoder, clock)
         {
+            _repository = repository;
+            _authenticationService = authenticationService;
         }
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
             string userName = "";
             string password = "";
+            User? user;
             var endpoint = Context.GetEndpoint();
             if(endpoint?.Metadata?.GetMetadata<IAllowAnonymous>() != null)
             {
@@ -35,7 +42,14 @@ namespace BackEnd23Harkka.Middleware
                 var credentials = Encoding.UTF8.GetString(credentialData).Split(new[] { ':' }, 2);
                 userName = credentials[0];
                 password = credentials[1];
-                if (!(userName == "tunnus" && password == "salasana"))
+
+                user = await _authenticationService.Authenticate(userName,password);
+
+                if (user==null)
+                {
+                    return AuthenticateResult.Fail("Unauthorized");
+                }
+                if (user.Password!=password)
                 {
                     return AuthenticateResult.Fail("Unauthorized");
                 }
