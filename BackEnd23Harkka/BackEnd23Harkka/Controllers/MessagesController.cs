@@ -15,29 +15,29 @@ namespace BackEnd23Harkka.Controllers
     [ApiController]
     public class MessagesController : ControllerBase
     {
-        private readonly MessageServiceContext _context;
+        
         private readonly IMessageService _messageService;
 
-        public MessagesController(IMessageService service, MessageServiceContext context)
+        public MessagesController(IMessageService service)
         {
             _messageService = service;
-            _context = context;
+            
         }
 
         // GET: api/Messages
 
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<Message>>> GetMessages()
+        public async Task<ActionResult<IEnumerable<MessageDTO>>> GetMessages()
         {
             return Ok(await _messageService.GetMessagesAsync());
         }
 
         // GET: api/Messages/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Message>> GetMessage(long id)
+        public async Task<ActionResult<MessageDTO>> GetMessage(long id)
         {
-            Message? message = await _messageService.GetMessageAsync(id);
+            MessageDTO? message = await _messageService.GetMessageAsync(id);
 
             if (message == null)
             {
@@ -50,64 +50,53 @@ namespace BackEnd23Harkka.Controllers
         // PUT: api/Messages/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMessage(int id, Message message)
+        public async Task<IActionResult> PutMessage(int id, MessageDTO message)
         {
             if (id != message.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(message).State = EntityState.Modified;
+            bool result = await _messageService.UpdateMessageAsync(message);
 
-            try
+            if (!result)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!MessageExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound(message);
             }
 
             return NoContent();
+
+            
         }
 
         // POST: api/Messages
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Message>> PostMessage(Message message)
+        [Authorize]
+        public async Task<ActionResult<Message>> PostMessage(MessageDTO message)
         {
-            _context.Messages.Add(message);
-            await _context.SaveChangesAsync();
+            MessageDTO newMessage = await _messageService.NewMessageAsync(message);
+            if (newMessage == null)
+            {
+                return Problem();
+            }
+            
 
             return CreatedAtAction("GetMessage", new { id = message.Id }, message);
         }
 
         // DELETE: api/Messages/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteMessage(int id)
         {
-            var message = await _context.Messages.FindAsync(id);
-            if (message == null)
+            if(await _messageService.DeleteMessageAsync(id))
             {
-                return NotFound();
+                return Ok();
             }
-
-            _context.Messages.Remove(message);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return NotFound();
         }
 
-        private bool MessageExists(int id)
-        {
-            return _context.Messages.Any(e => e.Id == id);
-        }
+       
     }
 }

@@ -14,4 +14,16 @@ namespace BackEnd23Harkka.Models
         public User? Recipient { get; set; }
         public Message? prevMessage { get; set; }
     }
+    public class MessageDTO
+    {
+        public int Id { get; set; }
+        [Required]
+        [MaxLength(255)]
+        public string? Title { get; set; }
+        public string? Body { get; set; }
+        [Required]
+        public string Sender { get; set; }
+        public string? Recipient { get; set; }
+        public long? prevMessageID { get; set; }
+    }
 }
