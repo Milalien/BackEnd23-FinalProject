@@ -28,7 +28,7 @@ namespace BackEnd23Harkka.Services
             return MessageToDto(await _repository.GetMessageAsync(id));
         }
 
-        public async Task<IEnumerable<MessageDTO>> GetMessagesAsync()
+        public async Task<IEnumerable<MessageDTO?>> GetMessagesAsync()
         {
             IEnumerable<Message> messages = await _repository.GetMessagesAsync();
             List<MessageDTO> result = new List<MessageDTO>();
@@ -42,7 +42,7 @@ namespace BackEnd23Harkka.Services
 
         public async Task<MessageDTO> NewMessageAsync(MessageDTO message)
         {
-
+            //TODO check if receiver exists
             return MessageToDto(await _repository.NewMessageAsync(await DTOToMessage(message)));
         }
 
@@ -106,6 +106,40 @@ namespace BackEnd23Harkka.Services
 
 
             return newMessage;
+        }
+
+        public async Task<IEnumerable<MessageDTO?>> GetSentMessagesAsync(string username)
+        {
+            User? user = await _userRepository.GetUserAsync(username);
+            if (user == null)
+            {
+                return null;
+            }
+            
+            IEnumerable<Message> messages = await _repository.GetSentMessagesAsync(user);
+            List<MessageDTO> result = new List<MessageDTO>();
+            foreach (Message message in messages)
+            {
+                result.Add(MessageToDto(message));
+            }
+            return result;
+        }
+
+        public async Task<IEnumerable<MessageDTO?>> GetReceivedMessagesAsync(string username)
+        {
+            User? user = await _userRepository.GetUserAsync(username);
+            if (user == null)
+            {
+                return null;
+            }
+
+            IEnumerable<Message> messages = await _repository.GetReceivedMessagesAsync(user);
+            List<MessageDTO> result = new List<MessageDTO>();
+            foreach (Message message in messages)
+            {
+                result.Add(MessageToDto(message));
+            }
+            return result;
         }
     }
 }

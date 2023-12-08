@@ -18,7 +18,7 @@ namespace BackEnd23Harkka.Repositories
             {
                 await _context.SaveChangesAsync();
             }
-            catch (Exception ex)
+            catch
             {
                 return false;
             }
@@ -32,7 +32,7 @@ namespace BackEnd23Harkka.Repositories
 
         public async Task<User?> GetUserAsync(string username)
         {
-            return _context.Users.Where(x=>x.userName == username).FirstOrDefault();
+            return await _context.Users.Where(x=>x.userName == username).FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<User>> GetUsersAsync()
@@ -55,7 +55,7 @@ namespace BackEnd23Harkka.Repositories
             {
                 await _context.SaveChangesAsync();
             }
-            catch (Exception ex)
+            catch 
             {
                 return false;
             }

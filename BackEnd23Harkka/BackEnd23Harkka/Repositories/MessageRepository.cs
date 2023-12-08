@@ -21,7 +21,7 @@ namespace BackEnd23Harkka.Repositories
             {
                 await _context.SaveChangesAsync();
             }
-            catch (Exception ex)
+            catch
             {
                 return false;
             }
@@ -35,7 +35,17 @@ namespace BackEnd23Harkka.Repositories
 
         public async Task<IEnumerable<Message>> GetMessagesAsync()
         {
-            return await _context.Messages.ToListAsync();
+            return await _context.Messages.Where(x => x.Recipient == null).TakeLast(10).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Message>> GetReceivedMessagesAsync(User user)
+        {
+            return await _context.Messages.Where(x => x.Recipient == user).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Message>> GetSentMessagesAsync(User user)
+        {
+            return await _context.Messages.Where(x => x.Sender == user).ToListAsync();
         }
 
         public async Task<Message> NewMessageAsync(Message message)
@@ -51,7 +61,7 @@ namespace BackEnd23Harkka.Repositories
             try
             {
                 await _context.SaveChangesAsync();
-            } catch(Exception ex)
+            } catch
             {
                 return false;
             }

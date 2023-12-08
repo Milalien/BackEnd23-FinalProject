@@ -11,13 +11,16 @@ namespace BackEnd23Harkka.Middleware
     {
         Task<User> Authenticate(string username, string password);
         User CreateUserCredentials(User user);
+        Task<bool> IsMyMessage(string username, long messageId);
     }
     public class UserAuthenticationService : IUserAuthenticationService
     {
         private readonly IUserRepository _repository;
-        public UserAuthenticationService(IUserRepository repository)
+        private readonly IMessageRepository _messageRepository;
+        public UserAuthenticationService(IUserRepository repository, IMessageRepository messageRepository)
         {
             _repository = repository;
+            _messageRepository = messageRepository;
         }
 
         public async Task<User> Authenticate(string username, string password)
@@ -69,9 +72,29 @@ namespace BackEnd23Harkka.Middleware
                 lastName = user.lastName,
                 Salt = salt,
                 Password = hashedPassword,
-                joinDate = DateTime.Now
+                joinDate = user.joinDate!=null? user.joinDate:DateTime.Now,
+                lastLogin=DateTime.Now
             };
             return newUser;
+        }
+
+        public async Task<bool> IsMyMessage(string username, long messageId)
+        {
+            User? user = await _repository.GetUserAsync(username);
+            if (user == null)
+            {
+                return false;
+            }
+            Message? message = await _messageRepository.GetMessageAsync(messageId);
+            if (message == null) 
+            { 
+                return false;
+            }
+            if (message.Sender == user)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

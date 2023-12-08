@@ -23,8 +23,8 @@ namespace BackEnd23Harkka.Middleware
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            string userName = "";
-            string password = "";
+            string userName;
+            string password;
             User? user;
             var endpoint = Context.GetEndpoint();
             if(endpoint?.Metadata?.GetMetadata<IAllowAnonymous>() != null)

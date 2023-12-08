@@ -9,7 +9,7 @@ namespace BackEnd23Harkka.Services
     {
         private readonly IUserRepository _repository;
         private readonly IUserAuthenticationService _authenticationService;
-        public UserService(UserRepository repository, IUserAuthenticationService authenticationService)
+        public UserService(IUserRepository repository, IUserAuthenticationService authenticationService)
         {
             _repository = repository;
             _authenticationService = authenticationService;
@@ -21,38 +21,75 @@ namespace BackEnd23Harkka.Services
             {
                 return await _repository.DeleteUserAsync(user);
             }
-                return false;
+            return false;
             
         }
 
-        public async Task<User?> GetUserAsync(long id)
+        public async Task<UserDTO?> GetUserAsync(long id)
         {
-            return await _repository.GetUserAsync(id);
+            User? user = await _repository.GetUserAsync(id);
+            if (user == null)
+            {
+                return null;
+            }
+            return UserToDTO(user);
         }
 
-        public Task<IEnumerable<User>> GetUsersAsync()
+        public Task<UserDTO?> GetUserAsync(User user)
         {
-            return _repository.GetUsersAsync();
+            throw new NotImplementedException();
         }
 
-        public async Task<User?> NewUserAsync(User user)
+        public async Task<IEnumerable<UserDTO?>> GetUsersAsync()
+        {
+            IEnumerable<User> users = await _repository.GetUsersAsync();
+            List<UserDTO> result = new List<UserDTO>();
+            foreach (User user in users)
+            {
+                result.Add(UserToDTO(user));
+            }
+            return result;
+        }
+
+        public async Task<UserDTO?> NewUserAsync(User user)
         {
             User? newUser = _authenticationService.CreateUserCredentials(user);
             if(newUser!=null)
             {
-                return await _repository.NewUserAsync(newUser);
+                return UserToDTO(await _repository.NewUserAsync(newUser));
 
             }
             return null;
         }
 
-        public async Task<bool> UpdateUserAsync(long id)
+        public async Task<bool> UpdateUserAsync(User user)
         {
-            User? user = await _repository.GetUserAsync(id);
-            if (user != null)
-            return await _repository.UpdateUserAsync(user);
 
-            return false;
+            User? dbUser = await _repository.GetUserAsync(user.userName);
+            if (dbUser == null)
+            {
+                return false;
+            }
+            dbUser.firstName = user.firstName;
+            dbUser.lastName = user.lastName;
+            dbUser.Password = user.Password;
+            dbUser = _authenticationService.CreateUserCredentials(dbUser);
+
+            return await _repository.UpdateUserAsync(dbUser);
+
+        }
+
+        private UserDTO UserToDTO(User user)
+        {
+            UserDTO dto = new UserDTO();
+
+            dto.userName = user.userName;
+            dto.firstName = user.firstName;
+            dto.lastName = user.lastName;
+            dto.joinDate = user.joinDate;
+            dto.lastLogin = user.lastLogin;
+
+            return dto;
         }
     }
 }

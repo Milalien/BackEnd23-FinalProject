@@ -7,7 +7,7 @@ namespace BackEnd23Harkka.Models
         public long Id { get; set; }
         [Required]
         [MinLength(3)]
-        [MaxLength(100)]
+        [MaxLength(255)]
         public string userName { get; set; }
         [Required]
         [MinLength(8)]
@@ -21,6 +21,21 @@ namespace BackEnd23Harkka.Models
 
         [Required]
         [MaxLength(50)]
+        public string? lastName { get; set; }
+        public DateTime? joinDate { get; set; }
+        public DateTime? lastLogin { get; set; }
+    }
+
+    public class UserDTO
+    {
+        [Required]
+        [MinLength(3)]
+        [MaxLength(255)]
+        public string userName { get; set; }
+        
+        [MaxLength(255)]
+        public string? firstName { get; set; }
+        [MaxLength(255)]
         public string? lastName { get; set; }
         public DateTime? joinDate { get; set; }
         public DateTime? lastLogin { get; set; }

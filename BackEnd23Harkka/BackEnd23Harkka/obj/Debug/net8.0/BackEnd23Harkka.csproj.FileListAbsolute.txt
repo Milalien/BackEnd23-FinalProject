@@ -253,3 +253,4 @@ C:\Users\karkk\OneDrive\Asiakirjat\GitHub\BackEnd23-FinalProject\BackEnd23Harkka
 C:\Users\karkk\OneDrive\Asiakirjat\GitHub\BackEnd23-FinalProject\BackEnd23Harkka\BackEnd23Harkka\obj\Debug\net8.0\BackEnd23Harkka.pdb
 C:\Users\karkk\OneDrive\Asiakirjat\GitHub\BackEnd23-FinalProject\BackEnd23Harkka\BackEnd23Harkka\obj\Debug\net8.0\BackEnd23Harkka.genruntimeconfig.cache
 C:\Users\karkk\OneDrive\Asiakirjat\GitHub\BackEnd23-FinalProject\BackEnd23Harkka\BackEnd23Harkka\obj\Debug\net8.0\ref\BackEnd23Harkka.dll
+C:\Users\karkk\OneDrive\Asiakirjat\GitHub\BackEnd23-FinalProject\BackEnd23Harkka\BackEnd23Harkka\obj\Debug\net8.0\BackEnd23Harkka.sourcelink.json

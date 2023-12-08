@@ -25,24 +25,23 @@ namespace BackEnd23Harkka.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers()
         {
             
-            return await _context.Users.ToListAsync();
+            return Ok(await _service.GetUsersAsync());
+
         }
 
         // GET: api/Users/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(long id)
+        public async Task<ActionResult<UserDTO>> GetUser(long id)
         {
-            var user = await _context.Users.FindAsync(id);
-
-            if (user == null)
+            UserDTO? dto = await _service.GetUserAsync(id);
+            if (dto == null)
             {
                 return NotFound();
             }
-
-            return user;
+            return Ok(dto);
         }
 
         // PUT: api/Users/5
@@ -54,57 +53,37 @@ namespace BackEnd23Harkka.Controllers
             {
                 return BadRequest();
             }
-
-            _context.Entry(user).State = EntityState.Modified;
-
-            try
+            if (await _service.UpdateUserAsync(user))
             {
-                await _context.SaveChangesAsync();
+                return NoContent();
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return NotFound();
         }
 
         // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
+        public async Task<ActionResult<UserDTO>> PostUser(User user)
         {
-            User? newUser = await _service.NewUserAsync(user);
+            UserDTO? newUser = await _service.NewUserAsync(user);
             
             if(newUser == null)
             {
                 return Problem();
             }
 
-            return CreatedAtAction("NewUser", new { id = newUser.Id }, newUser);
+            return CreatedAtAction("NewUser", newUser);
         }
 
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(long id)
         {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
+            if( await _service.DeleteUserAsync(id))
             {
-                return NotFound();
+                return NoContent();
             }
-
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return NotFound();
         }
 
         private bool UserExists(long id)
