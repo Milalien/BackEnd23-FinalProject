@@ -27,7 +27,16 @@ namespace BackEnd23Harkka.Services
             
             return MessageToDto(await _repository.GetMessageAsync(id));
         }
-
+        public async Task<IEnumerable<MessageDTO?>> SearchMessagesAsync(string searchtext)
+        {
+            IEnumerable<Message> messages = await _repository.SearchMessagesAsync(searchtext);
+            List<MessageDTO> result = new List<MessageDTO>();
+            foreach(Message message in messages)
+            {
+                result.Add(MessageToDto(message));
+            }
+            return result;
+        }
         public async Task<IEnumerable<MessageDTO?>> GetMessagesAsync()
         {
             IEnumerable<Message> messages = await _repository.GetMessagesAsync();
@@ -141,5 +150,7 @@ namespace BackEnd23Harkka.Services
             }
             return result;
         }
+
+        
     }
 }

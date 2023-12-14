@@ -5,6 +5,8 @@ namespace BackEnd23Harkka.Repositories
     public interface IMessageRepository
     {
         Task<IEnumerable<Message>> GetMessagesAsync();
+        Task<IEnumerable<Message>> SearchMessagesAsync(string searchtext);
+
         Task<IEnumerable<Message>> GetSentMessagesAsync(User user);
         Task<IEnumerable<Message>> GetReceivedMessagesAsync(User user);
         Task<Message?> GetMessageAsync(long id);

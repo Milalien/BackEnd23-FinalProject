@@ -53,6 +53,11 @@ namespace BackEnd23Harkka.Services
 
         public async Task<UserDTO?> NewUserAsync(User user)
         {
+            User? dbUser = await _repository.GetUserAsync(user.userName);
+            if (dbUser != null)
+            {
+                return null;
+            }
             User? newUser = _authenticationService.CreateUserCredentials(user);
             if(newUser!=null)
             {

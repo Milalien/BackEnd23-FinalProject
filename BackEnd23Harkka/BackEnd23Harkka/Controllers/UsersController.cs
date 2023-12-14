@@ -43,6 +43,7 @@ namespace BackEnd23Harkka.Controllers
             }
             return Ok(dto);
         }
+        
 
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -69,10 +70,10 @@ namespace BackEnd23Harkka.Controllers
             
             if(newUser == null)
             {
-                return Problem();
+                return Problem("Username not available. Choose a different username.");
             }
 
-            return CreatedAtAction("NewUser", newUser);
+            return CreatedAtAction(nameof(GetUser),new {id=newUser.userName}, newUser);
         }
 
         // DELETE: api/Users/5

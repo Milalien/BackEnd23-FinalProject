@@ -35,6 +35,12 @@ namespace BackEnd23Harkka.Controllers
         {
             return Ok(await _messageService.GetMessagesAsync());
         }
+        [HttpGet("search/{searchtext}")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<MessageDTO>>> SearchMessages(string searchtext)
+        {
+            return Ok(await _messageService.SearchMessagesAsync(searchtext));
+        }
 
         // GET: api/Messages/sent/username
 
