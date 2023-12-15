@@ -50,6 +50,7 @@ namespace BackEnd23Harkka.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser(long id, User user)
         {
+         
             if (id != user.Id)
             {
                 return BadRequest();

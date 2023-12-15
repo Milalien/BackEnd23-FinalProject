@@ -2,6 +2,7 @@
 using BackEnd23Harkka.Repositories;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Security.Cryptography;
+using System.Threading.Tasks.Dataflow;
 
 namespace BackEnd23Harkka.Middleware
  
@@ -11,7 +12,7 @@ namespace BackEnd23Harkka.Middleware
     {
         Task<User> Authenticate(string username, string password);
         User CreateUserCredentials(User user);
-        Task<bool> IsMyMessage(string username, long messageId);
+        Task<bool> IsMyMessage(string username, int messageId);
     }
     public class UserAuthenticationService : IUserAuthenticationService
     {
@@ -23,7 +24,7 @@ namespace BackEnd23Harkka.Middleware
             _messageRepository = messageRepository;
         }
 
-        public async Task<User> Authenticate(string username, string password)
+        public async Task<User?> Authenticate(string username, string password)
         {
             User? user;
 
@@ -34,6 +35,7 @@ namespace BackEnd23Harkka.Middleware
             }
 
             string hashedPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                
                 password: password,
                 salt: user.Salt,
                 prf: KeyDerivationPrf.HMACSHA256,
@@ -64,21 +66,16 @@ namespace BackEnd23Harkka.Middleware
                 numBytesRequested: 258 / 8));
 
 
+            user.Password = hashedPassword;
+            user.Salt = salt;
+            user.joinDate = user.joinDate != null ? user.joinDate : DateTime.Now;
+            user.lastLogin = DateTime.Now;
 
-            User newUser = new User
-            {
-                userName = user.userName,
-                firstName = user.firstName,
-                lastName = user.lastName,
-                Salt = salt,
-                Password = hashedPassword,
-                joinDate = user.joinDate!=null? user.joinDate:DateTime.Now,
-                lastLogin=DateTime.Now
-            };
-            return newUser;
+           
+            return user;
         }
 
-        public async Task<bool> IsMyMessage(string username, long messageId)
+        public async Task<bool> IsMyMessage(string username, int messageId)
         {
             User? user = await _repository.GetUserAsync(username);
             if (user == null)

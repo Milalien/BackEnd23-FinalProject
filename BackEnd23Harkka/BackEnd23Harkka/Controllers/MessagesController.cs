@@ -35,6 +35,8 @@ namespace BackEnd23Harkka.Controllers
         {
             return Ok(await _messageService.GetMessagesAsync());
         }
+
+        //GET: api/Messages/search/searchtext
         [HttpGet("search/{searchtext}")]
         [Authorize]
         public async Task<ActionResult<IEnumerable<MessageDTO>>> SearchMessages(string searchtext)
@@ -50,7 +52,7 @@ namespace BackEnd23Harkka.Controllers
         {
             if (this.User.FindFirst(ClaimTypes.Name)?.Value == username)
             {
-                IEnumerable<MessageDTO?> list = await _messageService.GetSentMessagesAsync(username);
+                IEnumerable<MessageDTO?>? list = await _messageService.GetSentMessagesAsync(username);
                 if (list == null)
                 {
                     return BadRequest();
@@ -68,7 +70,7 @@ namespace BackEnd23Harkka.Controllers
         {
             if (this.User.FindFirst(ClaimTypes.Name)?.Value == username)
             {
-                IEnumerable<MessageDTO?> list = await _messageService.GetReceivedMessagesAsync(username);
+                IEnumerable<MessageDTO?>? list = await _messageService.GetReceivedMessagesAsync(username);
                 if (list == null)
                 {
                     return BadRequest();
@@ -82,7 +84,7 @@ namespace BackEnd23Harkka.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<MessageDTO>> GetMessage(long id)
         {
-            MessageDTO message = await _messageService.GetMessageAsync(id);
+            MessageDTO? message = await _messageService.GetMessageAsync(id);
 
             if (message == null)
             {
@@ -96,8 +98,9 @@ namespace BackEnd23Harkka.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> PutMessage(int id, MessageDTO message)
+        public async Task<IActionResult> PutMessage(long id, MessageDTO message)
         {
+            
             if (this.User.FindFirst(ClaimTypes.Name)?.Value == message.Sender)
             {
                 if (id != message.Id)

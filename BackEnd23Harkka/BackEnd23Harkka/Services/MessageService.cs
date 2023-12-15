@@ -24,7 +24,6 @@ namespace BackEnd23Harkka.Services
 
         public async Task<MessageDTO?> GetMessageAsync(long id)
         {
-            
             return MessageToDto(await _repository.GetMessageAsync(id));
         }
         public async Task<IEnumerable<MessageDTO?>> SearchMessagesAsync(string searchtext)
@@ -51,7 +50,7 @@ namespace BackEnd23Harkka.Services
 
         public async Task<MessageDTO> NewMessageAsync(MessageDTO message)
         {
-            //TODO check if receiver exists
+            
             return MessageToDto(await _repository.NewMessageAsync(await DTOToMessage(message)));
         }
 
@@ -60,7 +59,9 @@ namespace BackEnd23Harkka.Services
             Message? dbMessage = await _repository.GetMessageAsync(message.Id);
             if (dbMessage != null)
             {
-                return await _repository.UpdateMessageAsync(await DTOToMessage(message));
+                dbMessage.Title = message.Title;
+                dbMessage.Body = message.Body;
+                return await _repository.UpdateMessageAsync(dbMessage);
             }
 
             return false;
@@ -117,7 +118,7 @@ namespace BackEnd23Harkka.Services
             return newMessage;
         }
 
-        public async Task<IEnumerable<MessageDTO?>> GetSentMessagesAsync(string username)
+        public async Task<IEnumerable<MessageDTO?>?> GetSentMessagesAsync(string username)
         {
             User? user = await _userRepository.GetUserAsync(username);
             if (user == null)
@@ -134,7 +135,7 @@ namespace BackEnd23Harkka.Services
             return result;
         }
 
-        public async Task<IEnumerable<MessageDTO?>> GetReceivedMessagesAsync(string username)
+        public async Task<IEnumerable<MessageDTO?>?> GetReceivedMessagesAsync(string username)
         {
             User? user = await _userRepository.GetUserAsync(username);
             if (user == null)

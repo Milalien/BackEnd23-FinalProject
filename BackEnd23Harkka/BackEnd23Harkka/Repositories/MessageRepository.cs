@@ -30,6 +30,7 @@ namespace BackEnd23Harkka.Repositories
 
         public async Task<Message?> GetMessageAsync(long id)
         {
+            
             return await _context.Messages.FindAsync(id);
         }
 

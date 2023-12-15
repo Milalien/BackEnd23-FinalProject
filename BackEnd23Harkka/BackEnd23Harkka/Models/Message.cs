@@ -4,7 +4,7 @@ namespace BackEnd23Harkka.Models
 {
     public class Message
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         [Required]
         [MaxLength(255)]
         public string? Title { get; set; }
@@ -16,7 +16,7 @@ namespace BackEnd23Harkka.Models
     }
     public class MessageDTO
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         [Required]
         [MaxLength(255)]
         public string? Title { get; set; }

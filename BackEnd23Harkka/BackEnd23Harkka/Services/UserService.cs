@@ -34,11 +34,7 @@ namespace BackEnd23Harkka.Services
             }
             return UserToDTO(user);
         }
-
-        public Task<UserDTO?> GetUserAsync(User user)
-        {
-            throw new NotImplementedException();
-        }
+      
 
         public async Task<IEnumerable<UserDTO?>> GetUsersAsync()
         {
