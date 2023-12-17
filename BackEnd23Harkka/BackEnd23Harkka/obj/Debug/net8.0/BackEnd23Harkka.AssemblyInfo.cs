@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BackEnd23Harkka")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8ce8546d3fa44769ebc77412f14f26b10682a984")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3f57adca319d23676dfc1fc7f08c8181a7917472")]
 [assembly: System.Reflection.AssemblyProductAttribute("BackEnd23Harkka")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BackEnd23Harkka")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
