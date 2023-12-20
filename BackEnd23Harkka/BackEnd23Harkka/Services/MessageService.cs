@@ -59,22 +59,29 @@ namespace BackEnd23Harkka.Services
             Message? dbMessage = await _repository.GetMessageAsync(message.Id);
             if (dbMessage != null)
             {
-                dbMessage.Title = message.Title;
-                dbMessage.Body = message.Body;
+                if (message.Title != null)
+                {
+                    dbMessage.Title = message.Title;
+                }
+                if (message.Body != null)
+                {
+                    dbMessage.Body = message.Body;
+                }
                 return await _repository.UpdateMessageAsync(dbMessage);
             }
-
-            return false;
+                return false;
         }
 
         private MessageDTO MessageToDto(Message message)
         {
-            MessageDTO messageDTO = new MessageDTO();
-            messageDTO.Id = message.Id;
-            messageDTO.Title = message.Title;
-            messageDTO.Body = message.Body;
-            messageDTO.Sender = message.Sender.userName;
-            if(message.Recipient!=null)
+            MessageDTO messageDTO = new MessageDTO
+            {
+                Id = message.Id,
+                Title = message.Title,
+                Body = message.Body,
+                Sender = message.Sender.userName
+            };
+            if (message.Recipient!=null)
             {
                 messageDTO.Recipient = message.Recipient.userName;
             }

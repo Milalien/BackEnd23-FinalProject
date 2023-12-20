@@ -36,7 +36,7 @@ namespace BackEnd23Harkka.Repositories
 
         public async Task<IEnumerable<Message>> GetMessagesAsync()
         {
-            return await _context.Messages.Where(x => x.Recipient == null).OrderByDescending(x=>x.Id).Take(10).ToListAsync();
+            return await _context.Messages.Where(x => x.Recipient == null).Include(s => s.Sender).Include(s => s.Recipient).OrderByDescending(x => x.Id).Take(10).ToListAsync();
         }
         public async Task<IEnumerable<Message>> SearchMessagesAsync(string searchtext)
         {
@@ -44,12 +44,12 @@ namespace BackEnd23Harkka.Repositories
         }
         public async Task<IEnumerable<Message>> GetReceivedMessagesAsync(User user)
         {
-            return await _context.Messages.Where(x => x.Recipient == user).ToListAsync();
+            return await _context.Messages.Where(x => x.Recipient == user).Include(s => s.Sender).Include(s => s.Recipient).ToListAsync();
         }
 
         public async Task<IEnumerable<Message>> GetSentMessagesAsync(User user)
         {
-            return await _context.Messages.Where(x => x.Sender == user).ToListAsync();
+            return await _context.Messages.Where(x => x.Sender == user).Include(s => s.Sender).Include(s => s.Recipient).ToListAsync();
         }
 
         public async Task<Message> NewMessageAsync(Message message)
