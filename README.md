@@ -1,6 +1,8 @@
 # BackEnd23-FinalProject
 
-A simple backend for a messaging app.
+This was my backend course's final project, done with the supervision of the teacher but as the only graded assignment so much of it is my own work.
+It is a backend for a simple messaging app.
+The complexity of the architecture is overboard for this purpose, but it was done this way so we could learn the meaning of the architecture but complete it in the given timeframe.
  
 ## Startup
 
